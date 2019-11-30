@@ -3,27 +3,24 @@ package com.team.bromall.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
-import com.team.bromall.dao.UserAdminPermissionRelationDao;
-import com.team.bromall.dao.UserAdminRoleRelationDao;
-import com.team.bromall.dto.AdminParam;
-import com.team.bromall.dto.AdminUserDetails;
-import com.team.bromall.dto.UpdateAdminPwdParam;
+import com.team.bromall.mapper.UserAdminLoginLogMapper;
+import com.team.bromall.mapper.UserAdminMapper;
+import com.team.bromall.mapper.UserAdminPermissionRelationMapper;
+import com.team.bromall.mapper.UserAdminRoleRelationMapper;
 import com.team.bromall.model.*;
-import com.team.bromall.mapper.*;
 import com.team.bromall.service.UserAdminService;
+import com.team.bromall.utils.AdminUserDetails;
 import com.team.bromall.utils.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,11 +55,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Autowired
     private UserAdminRoleRelationMapper adminRoleRelationMapper;
     @Autowired
-    private UserAdminRoleRelationDao adminRoleRelationDao;
-    @Autowired
     private UserAdminPermissionRelationMapper adminPermissionRelationMapper;
-    @Autowired
-    private UserAdminPermissionRelationDao adminPermissionRelationDao;
     @Autowired
     private UserAdminLoginLogMapper loginLogMapper;
 
@@ -85,7 +78,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
-    public UserAdmin register(AdminParam adminParam)
+    public UserAdmin register(UserAdmin adminParam)
     {
         UserAdmin userAdmin = new UserAdmin();
         BeanUtils.copyProperties(adminParam, userAdmin);
@@ -194,7 +187,7 @@ public class UserAdminServiceImpl implements UserAdminService {
                 roleRelation.setRoleId(roleId);
                 list.add(roleRelation);
             }
-            adminRoleRelationDao.insertList(list);
+            adminRoleRelationMapper.insertList(list);
         }
         return count;
     }
@@ -202,7 +195,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Override
     public List<UserRole> getRoleList(Long adminId)
     {
-        return adminRoleRelationDao.getRoleList(adminId);
+        return adminRoleRelationMapper.getRoleList(adminId);
     }
 
     @Override
@@ -214,7 +207,7 @@ public class UserAdminServiceImpl implements UserAdminService {
         relationExample.createCriteria().andAdminIdEqualTo(adminId);
         adminPermissionRelationMapper.deleteByExample(relationExample);
         //获取用户所有角色权限
-        List<UserPermission> permissionList = adminRoleRelationDao.getRolePermissionList(adminId);
+        List<UserPermission> permissionList = adminRoleRelationMapper.getRolePermissionList(adminId);
         List<Long> rolePermissionList = permissionList.stream().map(UserPermission::getId).collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(permissionIds)) {
             List<UserAdminPermissionRelation> relationList = new ArrayList<>();
@@ -225,7 +218,7 @@ public class UserAdminServiceImpl implements UserAdminService {
             //插入+-权限关系
             relationList.addAll(convert(adminId,1,addPermissionIdList));
             relationList.addAll(convert(adminId,-1,subPermissionIdList));
-            return adminPermissionRelationDao.insertList(relationList);
+            return 0; // adminPermissionRelationMapper.insertList(relationList);
         }
         return 0;
     }
@@ -251,30 +244,28 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Override
     public List<UserPermission> getPermissionList(Long adminId)
     {
-        return adminRoleRelationDao.getPermissionList(adminId);
+        return adminRoleRelationMapper.getPermissionList(adminId);
     }
 
     @Override
-    public int updatePassword(UpdateAdminPwdParam param)
+    public int updatePassword(String username, String oldPassword, String newPassword)
     {
-        if(StrUtil.isEmpty(param.getUsername())
-                ||StrUtil.isEmpty(param.getOldPassword())
-                ||StrUtil.isEmpty(param.getNewPassword())){
+        if (StrUtil.isEmpty(username) || StrUtil.isEmpty(oldPassword) || StrUtil.isEmpty(newPassword)) {
             return -1;
         }
 
         UserAdminExample example = new UserAdminExample();
-        example.createCriteria().andUsernameEqualTo(param.getUsername());
+        example.createCriteria().andUsernameEqualTo(username);
         List<UserAdmin> adminList = adminMapper.selectByExample(example);
         if(CollUtil.isEmpty(adminList)){
             return -2;
         }
 
         UserAdmin umsAdmin = adminList.get(0);
-        if(!passwordEncoder.matches(param.getOldPassword(),umsAdmin.getPassword())){
+        if(!passwordEncoder.matches(oldPassword,umsAdmin.getPassword())){
             return -3;
         }
-        umsAdmin.setPassword(passwordEncoder.encode(param.getNewPassword()));
+        umsAdmin.setPassword(passwordEncoder.encode(newPassword));
         adminMapper.updateByPrimaryKey(umsAdmin);
 
         return 1;

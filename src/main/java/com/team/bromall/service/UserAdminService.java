@@ -1,7 +1,5 @@
 package com.team.bromall.service;
 
-import com.team.bromall.dto.AdminParam;
-import com.team.bromall.dto.UpdateAdminPwdParam;
 import com.team.bromall.model.UserAdmin;
 import com.team.bromall.model.UserPermission;
 import com.team.bromall.model.UserRole;
@@ -13,7 +11,7 @@ import java.util.List;
 /**
  * 后台管理员Service接口
  *
- * @author zhangbocheng
+ * @author team
  * @version v1.0
  * @date 2019/11/29 21:33
  */
@@ -27,10 +25,10 @@ public interface UserAdminService {
 
     /**
      * 用户注册
-     * @param adminParam 需要的参数
+     * @param userAdmin 用户参数
      * @return 注册用户
      */
-    UserAdmin register(AdminParam adminParam);
+    UserAdmin register(UserAdmin userAdmin);
 
     /**
      * 用户登录
@@ -112,10 +110,12 @@ public interface UserAdminService {
 
     /**
      * 修改密码
-     * @param param 密码参数
+     * @param username 用户名
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
      * @return 修改状态
      */
-    int updatePassword(UpdateAdminPwdParam param);
+    int updatePassword(String username, String oldPassword, String newPassword);
 
     /**
      * 根据用户名获取用户信息

@@ -1,17 +1,15 @@
 package com.team.bromall.config;
 
 import com.team.bromall.service.UserAdminService;
-import com.team.bromall.utils.JwtTokenUtil;
 import com.team.bromall.utils.JwtAuthenticationTokenFilter;
+import com.team.bromall.utils.JwtTokenUtil;
 import com.team.bromall.utils.UserAccessDeniedHandler;
 import com.team.bromall.utils.UserAuthenticationEntryPoint;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,8 +33,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfig.class);
-
     @Autowired
     private UserAdminService adminService;
 
@@ -46,26 +42,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests();
 
         //允许跨域请求的OPTIONS请求
-        registry.antMatchers(HttpMethod.OPTIONS)
+        registry.antMatchers("/api/**")
                 .permitAll();
         // 任何请求需要身份认证
         registry.and()
+                .antMatcher("/api/**")
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
                 // 关闭跨站请求防护及不使用session
                 .and()
+                .antMatcher("/api/**")
                 .csrf()
                 .disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 // 自定义权限拒绝处理类
                 .and()
+                .antMatcher("/api/**")
                 .exceptionHandling()
                 .accessDeniedHandler(userAccessDeniedHandler())
                 .authenticationEntryPoint(userAuthenticationEntryPoint())
                 // 自定义权限拦截器JWT过滤器
                 .and()
+                .antMatcher("/api/**")
                 .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -112,4 +112,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //获取登录用户信息
         return username -> adminService.loadUserByUsername(username);
     }
+
 }

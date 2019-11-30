@@ -1,22 +1,17 @@
 package com.team.bromall.controller;
 
-import com.team.bromall.common.CommonPage;
-import com.team.bromall.dto.AdminParam;
-import com.team.bromall.dto.LoginAdminParam;
-import com.team.bromall.dto.UpdateAdminPwdParam;
 import com.team.bromall.model.UserAdmin;
-import com.team.bromall.model.UserPermission;
-import com.team.bromall.model.UserRole;
 import com.team.bromall.service.UserAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,12 +23,9 @@ import java.util.Map;
  */
 @Controller
 public class UserAdminController {
+
     @Autowired
     private UserAdminService userAdminService;
-    @Value("${jwt.tokenHeader}")
-    private String tokenHeader;
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
 
 //    @RequestMapping(value = "/register", method = RequestMethod.POST)
 //    public CommonResult<UserAdmin> register(AdminParam umsAdminParam, BindingResult result) {
@@ -44,22 +36,32 @@ public class UserAdminController {
 //        return CommonResult.success(userAdmin);
 //    }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(LoginAdminParam loginAdminParam) {
-        String token = userAdminService.login(loginAdminParam.getUsername(), loginAdminParam.getPassword());
-        if (token == null) {
-            return "index";
+    @RequestMapping(value = "/admin/login", method = RequestMethod.POST)
+    public String login(UserAdmin userAdmin, Model model) {
+        if(StringUtils.isEmpty(userAdmin.getUsername()) || StringUtils.isEmpty(userAdmin.getPassword())) {
+            model.addAttribute("info", "用户名或密码错误，请重新登录！");
+            return "login";
         }
-        Map<String, String> tokenMap = new HashMap<>(16);
-        tokenMap.put("token", token);
-        tokenMap.put("tokenHead", tokenHead);
+        String token = userAdminService.login(userAdmin.getUsername(), userAdmin.getPassword());
+        if (token == null) {
+            model.addAttribute("info", "用户名或密码错误，请重新登录！");
+            return "login";
+        }else {
+            model.addAttribute("adminUserInfo", userAdmin);
+            model.addAttribute("info", "恭喜您，登录成功！");
+            return "home";
+        }
+    }
+
+    @RequestMapping(value = "/admin/login", method = RequestMethod.GET)
+    public String login() {
         return "login";
     }
 
-    @RequestMapping("/")
-    public String root() {
-        return "index";
-    }
+//    @RequestMapping(value = "/admin/{html}",method = RequestMethod.GET)
+//    public String html(@PathVariable String html) {
+//        return html;
+//    }
 
 //    @RequestMapping(value = "/token/refresh", method = RequestMethod.GET)
 //    public CommonResult refreshToken(HttpServletRequest request) {
