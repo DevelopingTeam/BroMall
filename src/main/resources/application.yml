@@ -1,6 +1,8 @@
 spring:
   profiles:
-    active: dev # 默认为dev
+    active: dev  # 默认为dev
+  thymeleaf:
+    cache: false
 
 mybatis:
   mapper-locations:

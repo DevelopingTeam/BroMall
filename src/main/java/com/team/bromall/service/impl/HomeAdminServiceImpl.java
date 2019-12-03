@@ -19,11 +19,16 @@ public class HomeAdminServiceImpl implements HomeAdminService {
 
     @Override
     public String getPageURI(String pageName) {
-        pageMap.put("shopadding", "product-manage/shopadding");
-        pageMap.put("shoplist", "product-manage/shoplist");
-        pageMap.put("shopclassify", "product-manage/shopclassify");
-        pageMap.put("shoptype", "product-manage/shoptype");
-        pageMap.put("shopbrand", "product-manage/shopbrand");
-        return pageMap.get(pageName);
+        pageMap.put("shopadding", "shopadding");
+        pageMap.put("shoplist", "shoplist");
+        pageMap.put("shopclassify", "shopclassify");
+        pageMap.put("shoptype", "shoptype");
+        pageMap.put("shopbrand", "shopbrand");
+        String uri = pageMap.get(pageName);
+        if (uri != null) {
+            return uri;
+        } else {
+            return "404";
+        }
     }
 }

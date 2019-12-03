@@ -49,7 +49,7 @@ public class UserAdminController {
         }else {
             model.addAttribute("adminUserInfo", userAdmin);
             model.addAttribute("info", "恭喜您，登录成功！");
-            return "home";
+            return "redirect:home";
         }
     }
 

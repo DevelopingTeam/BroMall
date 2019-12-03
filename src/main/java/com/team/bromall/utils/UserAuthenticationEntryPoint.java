@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * 未登录或者token失效访问接口时，自定义的返回结果
  *
- * @author zhangbocheng
+ * @author team
  * @version v1.0
  * @date 2019/11/29 21:09
  */
