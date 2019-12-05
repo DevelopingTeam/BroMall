@@ -3,6 +3,12 @@ spring:
     active: dev  # 默认为dev
   thymeleaf:
     cache: false
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: WEB-INF/**
+
 
 mybatis:
   mapper-locations:

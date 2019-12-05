@@ -52,6 +52,11 @@
     <result column="comment_time" jdbcType="TIMESTAMP" property="commentTime" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
   </resultMap>
+  <resultMap id="GroupResultMap" type="com.team.bromall.model.OmsOrder">
+    <result column="create_date" jdbcType="VARCHAR" property="createTime" />
+    <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
+    <result column="pay_amount" jdbcType="DECIMAL" property="payAmount" />
+  </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
@@ -900,4 +905,13 @@
       modify_time = #{modifyTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="getOmsOrderByDate" parameterType="com.team.bromall.model.OmsOrder" resultMap="GroupResultMap">
+    SELECT DATE_FORMAT(`create_time`, '%Y-%m-%d') as create_date,
+      sum(`total_amount`)  as total_amount,
+      sum(`pay_amount`) as pay_amount
+      FROM oms_order
+      WHERE delete_status = 0
+      and DATE_FORMAT(`create_time`, '%Y-%m-%d') BETWEEN #{startDate,jdbcType=VARCHAR} AND #{endDate,jdbcType=VARCHAR}
+      group by DATE_FORMAT(`create_time`, '%Y-%m-%d');
+  </select>
 </mapper>

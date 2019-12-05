@@ -93,4 +93,12 @@ public interface OmsOrderMapper {
      * @mbg.generated Fri Nov 29 11:29:29 CST 2019
      */
     int updateByPrimaryKey(OmsOrder record);
+
+    /**
+     * 按天汇总订单总量及其金额（首页）
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<OmsOrder> getOmsOrderByDate(@Param("startDate")String startDate, @Param("endDate")String endDate);
 }

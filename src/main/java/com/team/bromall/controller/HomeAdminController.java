@@ -1,11 +1,16 @@
 package com.team.bromall.controller;
 
 import com.team.bromall.service.HomeAdminService;
+import com.team.bromall.service.OrderAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * bromall
@@ -19,24 +24,49 @@ public class HomeAdminController {
 
     @Autowired
     private HomeAdminService homeAdminService;
+    @Autowired
+    private OrderAdminService orderAdminService;
 
     @RequestMapping(value = "/admin/home", method = RequestMethod.POST)
     public String getPage(@RequestBody HashMap manageMap) {
         String pageName = (String) manageMap.get("manage_name");
-        System.out.println(homeAdminService.getPageURI(pageName));
         String uri = homeAdminService.getPageURI(pageName);
         return "redirect:" + uri;
     }
 
     @RequestMapping(value = "/admin/home", method = RequestMethod.GET)
-    public String home()
+    public String home(Model model)
     {
+        String startDate = "2019-01-01";
+        String endDate = "2019-12-31";
+        Map<String, List> orders = orderAdminService.getOrderSum(startDate, endDate);
+        Map<String, BigDecimal> orderNum = new HashMap<>(16);
+        Map<String, BigDecimal> orderMoney = new HashMap<>(16);
+        for (String date: orders.keySet()) {
+            orderNum.put(date, (BigDecimal) orders.get(date).get(0));
+            orderMoney.put(date, (BigDecimal) orders.get(date).get(1));
+        }
+
+        model.addAttribute("order_num", orderNum);
+        model.addAttribute("order_money", orderMoney);
         return "home";
     }
 
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
-    public String index()
+    public String index(Model model)
     {
+        String startDate = "2018-01-02";
+        String endDate = "2019-12-31";
+        Map<String, List> orders = orderAdminService.getOrderSum(startDate, endDate);
+        Map<String, BigDecimal> orderNum = new HashMap<>(16);
+        Map<String, BigDecimal> orderMoney = new HashMap<>(16);
+        for (String date: orders.keySet()) {
+            orderNum.put(date, (BigDecimal) orders.get(date).get(0));
+            orderMoney.put(date, (BigDecimal) orders.get(date).get(1));
+        }
+
+        model.addAttribute("order_num", orderNum);
+        model.addAttribute("order_money", orderMoney);
         return "home";
     }
 

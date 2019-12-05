@@ -1,5 +1,155 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="layout">
-<div th:fragment="content">
-    页面中正文内容：这是订单列表
-</div>
+ <div th:fragment="content">
+  <div class="container-fluid">
+
+   <!-- Breadcrumbs-->
+   <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+     <a href="#">首页</a>
+    </li>
+    <li class="breadcrumb-item">
+     <a href="#">订单管理</a>
+    </li>
+    <li class="breadcrumb-item active">订单类列表</li>
+   </ol>
+
+   <!-- DataTables Example -->
+   <div class="card mb-3">
+    <div class="card-header">
+     <i class="fas fa-search"></i>
+     数据搜索
+    </div>
+    <div class="card-body">
+     <form class="form-horizontal" action="#" method="post">
+      <div class="container-fluid row">
+       <div>
+        <label> 订单编号：</label>
+       </div>
+       <div class="col-sm-3">
+        <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="订单编号"/>
+       </div>
+       <div>
+        <label> 下单时间：</label>
+       </div>
+       <div class="col-sm-3">
+        <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="下单时间"/>
+       </div>
+       <div>
+        <label> 收货人：</label>
+       </div>
+       <div class="col-sm-3">
+        <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="收货人手机/姓名"/>
+       </div>
+      </div>
+      <div class="form-group"></div>
+      <div class="container-fluid row">
+       <div>
+        <label> 用户账号：</label>
+       </div>
+       <div class="col-sm-3">
+        <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="用户账号"/>
+       </div>
+       <div>
+        <label> 订单状态：</label>
+       </div>
+       <div class="col-sm-3">
+        <select class="form-control">
+         <option>全部</option>
+         <option>待付款</option>
+         <option>待发货</option>
+         <option>已发货</option>
+         <option>已完成</option>
+        </select>
+       </div>
+      </div>
+      <div class="form-group"></div>
+      <div class="container-fluid row">
+       <div class="col-sm-9"></div>
+       <div>
+        <button type="button" class="btn btn-danger">条件重置</button>
+        <button type="submit" class="btn btn-primary">查询搜索</button>
+       </div>
+      </div>
+     </form>
+    </div>
+   </div>
+   <div class="card mb-3">
+    <div class="card-header">
+     <i class="fas fa-table"></i>
+     数据列表</div>
+    <div class="card-body">
+     <div class="table-responsive">
+      <table class="table table-bordered" id="order" width="100%" cellspacing="0">
+       <thead>
+       <tr>
+        <th>订单编号</th>
+        <th>提交时间</th>
+        <th>用户账号</th>
+        <th>订单金额</th>
+        <th>支付方式</th>
+        <th>订单状态</th>
+       </tr>
+       </thead>
+       <tbody>
+       <tr>
+        <td>Tiger Nixon</td>
+        <td>System Architect</td>
+        <td>Edinburgh</td>
+        <td>61</td>
+        <td>2011/04/25</td>
+        <td>$320,800</td>
+       </tr>
+       </tbody>
+      </table>
+      <div class="row">
+       <div class="col-sm-6"></div>
+       <div class="text-center">
+        <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+          <ul class="pagination">
+           <li class="paginate_button page-item previous disabled" id="dataTable_previous">
+            <a href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">上一页</a>
+           </li>
+           <li class="paginate_button page-item active">
+            <a href="#" aria-controls="dataTable" data-dt-idx="1" tabindex="0" class="page-link">2</a>
+           </li>
+           <li class="paginate_button page-item">
+            <a href="#" aria-controls="dataTable" data-dt-idx="2" tabindex="0" class="page-link">2</a>
+           </li>
+           <li class="paginate_button page-item">
+            <a href="#" aria-controls="dataTable" data-dt-idx="..." tabindex="0" class="page-link">...</a>
+           </li>
+           <li class="paginate_button page-item next">
+            <a href="#" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">下一页</a>
+           </li>
+          </ul>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <!-- /.container-fluid -->
+   <!-- Bootstrap core JavaScript-->
+   <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+   <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+   <!-- Core plugin JavaScript-->
+   <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+   <!-- Page level plugin JavaScript-->
+   <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
+   <script th:src="@{/vendor/datatables/jquery.dataTables.js}"></script>
+   <script th:src="@{/vendor/datatables/dataTables.bootstrap4.js}"></script>
+
+   <!-- Custom scripts for all pages-->
+   <script th:src="@{/js/sb-admin.min.js}"></script>
+
+   <!-- Data scripts for this page-->
+   <script th:inline="javascript">
+//         $(document).ready(function() {
+//             $('#order').DataTable();
+//         });
+   </script>
+ </div>
 </html>

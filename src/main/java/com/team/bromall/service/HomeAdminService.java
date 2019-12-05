@@ -1,5 +1,8 @@
 package com.team.bromall.service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 后台管理首页Service接口
  *
@@ -14,4 +17,16 @@ public interface HomeAdminService {
      * @return Page URI
      */
     String getPageURI(String pageName);
+
+    /**
+     * 获取用户概况（分段新增和总数）
+     * @return (今日/昨日/本月新增及会员总数)
+     */
+    //List<Integer> getUserProfile();
+
+    /**
+     * 获取商品概况（分段新增和总数）
+     * @return (上架/下架/缺库存)
+     */
+   // List<Integer> getCommodityProfile();
 }
