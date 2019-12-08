@@ -5,10 +5,10 @@
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="#">首页</a>
+                <a href="/admin">首页</a>
             </li>
             <li class="breadcrumb-item">
-                <a href="#">订单管理</a>
+                <a href="/admin/orderlist">订单管理</a>
             </li>
             <li class="breadcrumb-item active">订单设置</li>
         </ol>
@@ -16,17 +16,19 @@
         <!-- DataTables Example -->
         <div class="card mb-3">
             <div class="card-header">
-                <i class="fas fa-search"></i>
+                <i class="fas fa-tree"></i>
                 订单设置操作
             </div>
             <div class="card-body">
                 <form class="form-horizontal" action="#" method="post">
+                    <input type="text" name="id" style="display:none" th:value="${orderSetting.id}"/>
                     <div class="container-fluid row">
                         <div>
                             <label> 秒杀订单超过(分)：</label>
                         </div>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="60"/>
+                            <input type="text" class="form-control form-control-sm" name="flashOrderOvertime"
+                                   th:value="${orderSetting.flashOrderOvertime}" placeholder="60"/>
                         </div>
                         <div class="col-sm-6">
                             未付款，订单自动关闭
@@ -38,7 +40,8 @@
                             <label> 正常订单超过(分)：</label>
                         </div>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="120"/>
+                            <input type="text" class="form-control form-control-sm" name="normalOrderOvertime"
+                                   th:value="${orderSetting.normalOrderOvertime}" placeholder="120"/>
                         </div>
                         <div class="col-sm-6">
                             未付款，订单自动关闭
@@ -50,7 +53,8 @@
                             <label> 订单发货超过(天)：</label>
                         </div>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="15"/>
+                            <input type="text" class="form-control form-control-sm" name="confirmOvertime"
+                                   th:value="${orderSetting.confirmOvertime}" placeholder="15"/>
                         </div>
                         <div class="col-sm-6">
                             未收货，订单自动完成
@@ -62,7 +66,8 @@
                             <label> 订单完成超过(天)：</label>
                         </div>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="7"/>
+                            <input type="text" class="form-control form-control-sm" name="finishOvertime"
+                                   th:value="${orderSetting.finishOvertime}" placeholder="7"/>
                         </div>
                         <div class="col-sm-6">
                             自动结束交易，不能申请售后
@@ -74,7 +79,8 @@
                             <label> 订单完成超过(天)：</label>
                         </div>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="7"/>
+                            <input type="text" class="form-control form-control-sm" name="commentOvertime"
+                                   th:value="${orderSetting.commentOvertime}" placeholder="7"/>
                         </div>
                         <div class="col-sm-6">
                             自动五星好评
@@ -105,5 +111,13 @@
     <script th:src="@{/js/sb-admin.min.js}"></script>
 
     <!-- Data scripts for this page-->
+    <script th:inline="javascript">
+        var msg = [[${msg}]];
+        $(document).ready(function () {
+            if (msg) {
+                alert(msg);
+            }
+        })
+    </script>
 </div>
 </html>

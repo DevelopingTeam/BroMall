@@ -28,7 +28,7 @@ public interface OrderAdminService {
 
     /**
      * 获取订单的销售额
-     * @return
+     * @return 今日/昨日/本月销售额(首页)
      */
     Map<String, List> getOrderTotalSales();
 }

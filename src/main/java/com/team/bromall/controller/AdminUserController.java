@@ -3,26 +3,21 @@ package com.team.bromall.controller;
 import com.team.bromall.model.UserAdmin;
 import com.team.bromall.service.UserAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * 后台系统用户管理
+ * 后台管理系统-用户管理
  *
  * @author team
  * @version v1.0
  * @date 2019/11/23 10:33
  */
 @Controller
-public class UserAdminController {
+public class AdminUserController {
 
     @Autowired
     private UserAdminService userAdminService;
@@ -57,11 +52,6 @@ public class UserAdminController {
     public String login() {
         return "login";
     }
-
-//    @RequestMapping(value = "/admin/{html}",method = RequestMethod.GET)
-//    public String html(@PathVariable String html) {
-//        return html;
-//    }
 
 //    @RequestMapping(value = "/token/refresh", method = RequestMethod.GET)
 //    public CommonResult refreshToken(HttpServletRequest request) {

@@ -1,5 +1,8 @@
 package com.team.bromall.mapper;
 
+import com.team.bromall.dto.OrderDeliveryParam;
+import com.team.bromall.dto.OrderDetail;
+import com.team.bromall.dto.OrderQueryParam;
 import com.team.bromall.model.OmsOrder;
 import com.team.bromall.model.OmsOrderExample;
 import java.util.List;
@@ -96,9 +99,30 @@ public interface OmsOrderMapper {
 
     /**
      * 按天汇总订单总量及其金额（首页）
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 查询结果
      */
     List<OmsOrder> getOmsOrderByDate(@Param("startDate")String startDate, @Param("endDate")String endDate);
+
+    /**
+     * 条件查询订单
+     * @param queryParam 查询参数
+     * @return 查询结果
+     */
+    List<OmsOrder> getList(@Param("queryParam") OrderQueryParam queryParam);
+
+    /**
+     * 批量发货
+     * @param deliveryParamList 设置参数
+     * @return 操作状态
+     */
+    int delivery(@Param("list") List<OrderDeliveryParam> deliveryParamList);
+
+    /**
+     * 获取订单详情
+     * @param id 订单ID
+     * @return 查询结果
+     */
+    OrderDetail getDetail(@Param("id") Long id);
 }

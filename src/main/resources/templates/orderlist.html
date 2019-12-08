@@ -5,12 +5,12 @@
    <!-- Breadcrumbs-->
    <ol class="breadcrumb">
     <li class="breadcrumb-item">
-     <a href="#">首页</a>
+     <a href="/admin">首页</a>
     </li>
     <li class="breadcrumb-item">
-     <a href="#">订单管理</a>
+     <a href="/admin/orderlist">订单管理</a>
     </li>
-    <li class="breadcrumb-item active">订单类列表</li>
+    <li class="breadcrumb-item active">订单列表</li>
    </ol>
 
    <!-- DataTables Example -->
@@ -26,19 +26,19 @@
         <label> 订单编号：</label>
        </div>
        <div class="col-sm-3">
-        <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="订单编号"/>
+        <input type="text" class="form-control form-control-sm" name="orderSn" placeholder="订单编号"/>
        </div>
        <div>
         <label> 下单时间：</label>
        </div>
        <div class="col-sm-3">
-        <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="下单时间"/>
+        <input type="text" class="form-control form-control-sm" name="createTime" id="createTime" placeholder="下单时间"/>
        </div>
        <div>
         <label> 收货人：</label>
        </div>
        <div class="col-sm-3">
-        <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="收货人手机/姓名"/>
+        <input type="text" class="form-control form-control-sm" name="receiverKey" placeholder="收货人手机/姓名"/>
        </div>
       </div>
       <div class="form-group"></div>
@@ -47,26 +47,26 @@
         <label> 用户账号：</label>
        </div>
        <div class="col-sm-3">
-        <input type="text" class="form-control form-control-sm" name="orderNo" placeholder="用户账号"/>
+        <input type="text" class="form-control form-control-sm" name="memberUsername" placeholder="用户账号"/>
        </div>
        <div>
         <label> 订单状态：</label>
        </div>
        <div class="col-sm-3">
-        <select class="form-control">
-         <option>全部</option>
-         <option>待付款</option>
-         <option>待发货</option>
-         <option>已发货</option>
-         <option>已完成</option>
-        </select>
+         <select class="form-control form-control-sm" name="status">
+          <option value="">全部</option>
+          <option value="0">待付款</option>
+          <option value="1">待发货</option>
+          <option value="2">已发货</option>
+          <option value="3">已完成</option>
+         </select>
        </div>
       </div>
       <div class="form-group"></div>
       <div class="container-fluid row">
        <div class="col-sm-9"></div>
        <div>
-        <button type="button" class="btn btn-danger">条件重置</button>
+        <button type="reset" class="btn btn-danger">条件重置</button>
         <button type="submit" class="btn btn-primary">查询搜索</button>
        </div>
       </div>
@@ -79,7 +79,7 @@
      数据列表</div>
     <div class="card-body">
      <div class="table-responsive">
-      <table class="table table-bordered" id="order" width="100%" cellspacing="0">
+      <table class="table table-bordered" id="orderList" width="100%" cellspacing="0">
        <thead>
        <tr>
         <th>订单编号</th>
@@ -88,38 +88,75 @@
         <th>订单金额</th>
         <th>支付方式</th>
         <th>订单状态</th>
+        <th>操    作</th>
        </tr>
        </thead>
        <tbody>
-       <tr>
-        <td>Tiger Nixon</td>
-        <td>System Architect</td>
-        <td>Edinburgh</td>
-        <td>61</td>
-        <td>2011/04/25</td>
-        <td>$320,800</td>
+       <tr th:each="order:${orderList}">
+        <td th:text="${order.orderSn}"></td>
+        <td th:text="${#dates.format(order.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${order.memberUsername}"></td>
+        <td th:text="${order.payAmount}"></td>
+        <!--支付方式：0->未支付；1->支付宝；2->微信-->
+        <td th:switch="${order.payType}">
+         <span th:case="0">未支付</span>
+         <span th:case="1">支付宝</span>
+         <span th:case="2">微信</span>
+        </td>
+        <!--订单状态：0->待付款；1->待发货；2->已发货；3->已完成；4->已关闭；5->无效订单-->
+        <td th:switch="${order.status}">
+         <span th:case="0">待付款</span>
+         <span th:case="1">待发货</span>
+         <span th:case="2">已发货</span>
+         <span th:case="3">已完成</span>
+         <span th:case="4">已关闭</span>
+         <span th:case="5">无效订单</span>
+        </td>
+        <td>
+            <a th:href="'orderdetail?id='+${order.id}">查看详情</a>
+            <!--订单状态：0->待付款；1->待发货；2->已发货；3->已完成；4->已关闭；5->无效订单-->
+            <a href="#" data-toggle="modal" data-target="#dataModal" style="color: red"
+               th:style="${order.status}==0?'':'display:none'">订单删除</a>
+            <a href="#" data-toggle="modal" data-target="#dataModal" style="color: red"
+               th:style="${order.status}==1?'':'display:none'">订单发货</a>
+            <a href="#" data-toggle="modal" data-target="#dataModal" style="color: red"
+               th:style="${order.status}==2?'':'display:none'">订单跟踪</a>
+            <a href="#" data-toggle="modal" data-target="#dataModal" style="color: red"
+               th:style="${order.status}==3?'':'display:none'">订单跟踪</a>
+            <a href="#" data-toggle="modal" data-target="#dataModal" style="color: red"
+               th:style="${order.status}==4?'':'display:none'">订单删除</a>
+            <a href="#" data-toggle="modal" data-target="#dataModal" style="color: red"
+               th:style="${order.status}==5?'':'display:none'">订单删除</a>
+        </td>
        </tr>
        </tbody>
       </table>
-      <div class="row">
+      <div id="pages" class="row">
        <div class="col-sm-6"></div>
        <div class="text-center">
-        <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
+        <div class="dataTables_paginate paging_simple_numbers">
           <ul class="pagination">
-           <li class="paginate_button page-item previous disabled" id="dataTable_previous">
-            <a href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">上一页</a>
+           <li th:class="${pageInfo.pageNum}=='1' ? 'paginate_button page-item disabled':'paginate_button page-item' ">
+            <a href="orderlist" aria-controls="dataTable" class="page-link">首页</a>
            </li>
-           <li class="paginate_button page-item active">
-            <a href="#" aria-controls="dataTable" data-dt-idx="1" tabindex="0" class="page-link">2</a>
+           <li class="paginate_button page-item previous">
+            <a th:href="@{'?page=' + ${pageInfo.prePage}}" th:if="${pageInfo.hasPreviousPage} == true" aria-controls="dataTable" class="page-link">上一页</a>
            </li>
-           <li class="paginate_button page-item">
-            <a href="#" aria-controls="dataTable" data-dt-idx="2" tabindex="0" class="page-link">2</a>
-           </li>
-           <li class="paginate_button page-item">
-            <a href="#" aria-controls="dataTable" data-dt-idx="..." tabindex="0" class="page-link">...</a>
+           <li class="paginate_button page-item next disabled">
+            <a th:href="@{'?page=' + ${pageInfo.pageNum}}" aria-controls="dataTable" class="page-link">
+             <b th:text="${pageInfo.pageNum}"></b>
+            </a>
            </li>
            <li class="paginate_button page-item next">
-            <a href="#" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">下一页</a>
+            <a th:href="@{'?page=' + ${pageInfo.nextPage}}" th:if="${pageInfo.hasNextPage} == true" aria-controls="dataTable" class="page-link">下一页</a>
+           </li>
+           <li th:class="${pageInfo.pageNum} == ${pageInfo.pages} ? 'paginate_button page-item disabled':'paginate_button page-item' ">
+            <a th:href="@{'?page=' + ${pageInfo.pages}}" aria-controls="dataTable" class="page-link">尾页</a>
+           </li>
+           <li class="paginate_button page-item disabled">
+            <a aria-controls="dataTable" class="page-link">
+             <b th:text="'共' + ${pageInfo.pages} +'页'"></b>
+            </a>
            </li>
           </ul>
         </div>
@@ -129,6 +166,28 @@
     </div>
    </div>
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <div class="modal-header">
+      <h5 class="modal-title" id="dataModalLabel">Data Modal</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+      </button>
+     </div>
+     <div class="modal-body">
+      ...
+     </div>
+     <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">关 闭</button>
+      <button type="button" class="btn btn-primary">确 定</button>
+     </div>
+    </div>
+   </div>
+  </div>
+
   <!-- /.container-fluid -->
    <!-- Bootstrap core JavaScript-->
    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
@@ -145,11 +204,17 @@
    <!-- Custom scripts for all pages-->
    <script th:src="@{/js/sb-admin.min.js}"></script>
 
-   <!-- Data scripts for this page-->
+   <script th:src="@{/js/moment-with-locales.min.js}"></script>
+   <script th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+   <script th:src="@{/js/common.js}"></script>
+  <!-- Data scripts for this page-->
    <script th:inline="javascript">
-//         $(document).ready(function() {
-//             $('#order').DataTable();
-//         });
+    $(function () {
+      $('#createTime').datetimepicker({
+        format: 'YYYY-MM-DD',
+        locale: moment.locale('zh-cn')
+      });
+    });
    </script>
  </div>
 </html>

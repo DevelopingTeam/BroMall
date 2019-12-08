@@ -17,7 +17,8 @@
     <!-- Custom styles for this template-->
     <link th:href="@{/css/sb-admin.css}" rel="stylesheet">
 
-
+    <link th:href="@{/css/bootstrap-datetimepicker.min.css}" rel="stylesheet">
+    <link th:href="@{/css/ystep.css}" rel="stylesheet">
   </head>
 
   <body id="page-top">
@@ -26,7 +27,7 @@
 
         <a class="navbar-brand mr-1" href="/admin">后台管理系统</a>
 
-        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="/admin">
             <i class="fas fa-bars"></i>
         </button>
 
@@ -94,7 +95,7 @@
                 </a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="/admin/shoplist" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>商品管理</span>
                 </a>
@@ -107,19 +108,19 @@
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="/admin/orderlist" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>订单管理</span>
                 </a>
                 <div id="order_manage"  class="dropdown-menu" aria-labelledby="pagesDropdown">
                     <a class="dropdown-item" href="/admin/orderlist">订单列表</a>
                     <a class="dropdown-item" href="/admin/ordersetting">订单设置</a>
-                    <a class="dropdown-item" href="/admin/ordercanceling">退货申请处理</a>
-                    <a class="dropdown-item" href="/admin/ordercancelsetting">退货原因设置</a>
+                    <a class="dropdown-item" href="/admin/orderreturnapplay">退货申请处理</a>
+                    <a class="dropdown-item" href="/admin/orderreturnsetting">退货原因设置</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="/admin/spikelist" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fas fa-fw fa-folder"></i>
                     <span>营销策略管理</span>
                 </a>

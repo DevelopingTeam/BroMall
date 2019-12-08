@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * bromall
+ * 后台管理系统-首页
  *
  * @author team
  * @version v1.0
  * @date 2019/12/1 23:08
  */
 @Controller
-public class HomeAdminController {
+public class AdminHomeController {
 
     @Autowired
     private HomeAdminService homeAdminService;
@@ -37,7 +37,7 @@ public class HomeAdminController {
     @RequestMapping(value = "/admin/home", method = RequestMethod.GET)
     public String home(Model model)
     {
-        String startDate = "2019-01-01";
+        String startDate = "2018-01-01";
         String endDate = "2019-12-31";
         Map<String, List> orders = orderAdminService.getOrderSum(startDate, endDate);
         Map<String, BigDecimal> orderNum = new HashMap<>(16);
@@ -98,30 +98,6 @@ public class HomeAdminController {
     public String shopBrand()
     {
         return "shopbrand";
-    }
-
-    @RequestMapping(value = "/admin/orderlist", method = RequestMethod.GET)
-    public String orderList()
-    {
-        return "orderlist";
-    }
-
-    @RequestMapping(value = "/admin/ordersetting", method = RequestMethod.GET)
-    public String orderSetting()
-    {
-        return "ordersetting";
-    }
-
-    @RequestMapping(value = "/admin/ordercanceling", method = RequestMethod.GET)
-    public String orderCanceling()
-    {
-        return "ordercanceling";
-    }
-
-    @RequestMapping(value = "/admin/ordercancelsetting", method = RequestMethod.GET)
-    public String orderCancelSetting()
-    {
-        return "ordercancelsetting";
     }
 
     @RequestMapping(value = "/admin/spikelist", method = RequestMethod.GET)

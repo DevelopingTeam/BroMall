@@ -1,0 +1,323 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout">
+<div th:fragment="content">
+    <div class="container-fluid">
+
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/admin">首页</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/admin/orderlist">订单管理</a>
+            </li>
+            <li class="breadcrumb-item active">退货原因设置</li>
+        </ol>
+
+        <!-- DataTables Example -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-search"></i>
+                数据设置操作
+            </div>
+            <div class="card-body">
+                <form class="form-horizontal" action="#" method="post">
+                    <div class="container-fluid row">
+                        <div>
+                            <label> 原因类型：</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control form-control-sm" name="name" required placeholder="退货原因"/>
+                        </div>
+                        <div>
+                            <label> 排序：</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control form-control-sm" required name="sort" placeholder="1"/>
+                        </div>
+                        <div>
+                            <label> 是否启用：</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="yes" value="1">
+                                <label class="form-check-label" for="yes">是</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="status" id="no" value="0">
+                                <label class="form-check-label" for="no">否</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="container-fluid row">
+                        <div class="col-sm-10"></div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">添加数据</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-table"></i>
+                数据列表</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="order" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>编   号</th>
+                            <th>原因类型</th>
+                            <th>排   序</th>
+                            <th>是否可用</th>
+                            <th>添加时间</th>
+                            <th>操   作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                         <tr th:each="item:${returnReasonList}">
+                            <td th:text="${item.id}"></td>
+                            <td th:text="${item.name}"></td>
+                            <td th:text="${item.sort}"></td>
+                            <td th:text="${item.status}"></td>
+                            <td th:text="${#dates.format(item.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+                            <td>
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#returnReasonEdit" th:onclick="'javascript:getItem(this)'">编 辑</button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="btn btn-danger" data-toggle="modal" data-target="#returnReasonDelete" th:onclick="'javascript:getID(this)'">删 除</button>
+                            </td>
+                         </tr>
+                        </tbody>
+                    </table>
+                    <div id="pages" class="row">
+                        <div class="col-sm-6"></div>
+                        <div class="text-center">
+                            <div class="dataTables_paginate paging_simple_numbers">
+                                <ul class="pagination">
+                                    <li th:class="${pageInfo.pageNum} == '1' ? 'paginate_button page-item disabled':'paginate_button page-item' ">
+                                        <a href="orderlist" aria-controls="dataTable" class="page-link">首页</a>
+                                    </li>
+                                    <li class="paginate_button page-item previous">
+                                        <a  th:href="@{'?page=' + ${pageInfo.prePage}}" th:if="${pageInfo.hasPreviousPage} == true" aria-controls="dataTable" class="page-link">上一页</a>
+                                    </li>
+                                    <li class="paginate_button page-item next disabled">
+                                        <a th:href="@{'?page=' + ${pageInfo.pageNum}}" aria-controls="dataTable" class="page-link">
+                                            <b th:text="${pageInfo.pageNum}"></b>
+                                        </a>
+                                    </li>
+                                    <li class="paginate_button page-item next">
+                                        <a th:href="@{'?page=' + ${pageInfo.nextPage}}" th:if="${pageInfo.hasNextPage} == true" aria-controls="dataTable" class="page-link">下一页</a>
+                                    </li>
+                                    <li th:class="${pageInfo.pageNum} == ${pageInfo.pages} ? 'paginate_button page-item disabled':'paginate_button page-item' ">
+                                        <a th:href="@{'?page=' + ${pageInfo.pages}}" aria-controls="dataTable" class="page-link">尾页</a>
+                                    </li>
+                                    <li class="paginate_button page-item disabled">
+                                        <a aria-controls="dataTable" class="page-link">
+                                            <b th:text="'共' + ${pageInfo.pages} +'页'"></b>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+    <!-- Modal -->
+    <div class="modal fade" id="returnReasonEdit" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="returnReasonEditLabel">退货原因设置修改</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="mode_id" id="mode_id" style="display:none"/>
+                    <div class="container-fluid row">
+                        <div  class="col-sm-4">
+                            <label> 原因类型：</label>
+                        </div>
+                        <div  class="col-sm-8">
+                            <input type="text" class="form-control form-control-sm" name="mode_name" id="mode_name" required placeholder="退货原因"/>
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="container-fluid row">
+                        <div  class="col-sm-4">
+                            <label> 排序：</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control form-control-sm" required name="mode_sort" id="mode_sort" placeholder="1"/>
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="container-fluid row">
+                        <div  class="col-sm-4">
+                            <label> 是否启用：</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="mode_status" id="model_yes" value="1">
+                                <label class="form-check-label" for="yes">是</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="mode_status" id="model_no" value="0">
+                                <label class="form-check-label" for="no">否</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关 闭</button>
+                    <button type="button" class="btn btn-primary" th:onclick="'javascript:update()'">确 定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="returnReasonDelete" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="returnReasonDeleteLabel">警 告</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="mode_sn" id="mode_sn" style="display:none"/>
+                    确定要删除这条数据么？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关 闭</button>
+                    <button type="button" class="btn btn-primary" th:onclick="'javascript:deleteId()'">确 定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+    <!-- Page level plugin JavaScript-->
+    <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
+    <script th:src="@{/vendor/datatables/jquery.dataTables.js}"></script>
+    <script th:src="@{/vendor/datatables/dataTables.bootstrap4.js}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script th:src="@{/js/sb-admin.min.js}"></script>
+
+    <!-- Data scripts for this page-->
+    <script th:inline="javascript">
+        var msg = [[${msg}]];
+        $(document).ready(function () {
+            if (msg) {
+                alert(msg);
+            }
+        });
+
+        // 给模态框赋值
+        function getItem(obj) {
+            // 获取当前行号
+            var id = event.srcElement.parentElement.parentElement.rowIndex;
+            // 获取数据
+            var sn = document.getElementById("order").rows[id].cells[0].innerText;
+            var name = document.getElementById("order").rows[id].cells[1].innerText;
+            var sort = document.getElementById("order").rows[id].cells[2].innerText;
+            var status = document.getElementById("order").rows[id].cells[3].innerText;
+            // 给模态框传值
+            $("#mode_id").val(sn);
+            $("#mode_name").val(name);
+            $("#mode_sort").val(sort);
+            if (status == "1") {
+                document.getElementById('model_yes').checked = true;
+            } else {
+                document.getElementById('model_no').checked = true;
+            }
+            $("#returnReasonEdit").modal('show');
+        }
+
+        function getID(obj) {
+            // 获取当前行号
+            var id = event.srcElement.parentElement.parentElement.rowIndex;
+            // 获取数据
+            var sn = document.getElementById("order").rows[id].cells[0].innerText;
+            // 给模态框传值
+            $("#mode_sn").val(sn);
+            $("#returnReasonDelete").modal('show');
+        }
+
+        // 修改记录
+        function update() {
+            // 获取模态框的数据
+            var sn = $("#mode_id").val();
+            var name = $("#mode_name").val();
+            var sort = $("#mode_sort").val();
+            var status = $('input[name="mode_status"]:checked').val();
+            var reason = {"id": sn, "name": name, "sort": sort, "status": status};
+            // ajax
+            $.ajax({
+                type: "POST",
+                url: "/admin/orderreturnsetting/update",
+                dataType: "json",
+                data: JSON.stringify(reason),
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $('#returnReasonEdit').modal('hide');
+                    alert(data["msg"]);
+                    //刷新页面
+                    window.location.reload();
+                },
+                error: function (error) {
+                    var errMsg = "错误状态码：" + JSON.parse(error.responseText)["status"]
+                        + "\n错误原因：" + JSON.parse(error.responseText)["message"];
+                    $('#returnReasonEdit').modal('hide');
+                    alert(errMsg);
+                    //刷新页面
+                    window.location.reload();
+                }
+            });
+        }
+
+        // 删除记录
+        function deleteId() {
+            // 获取模态框的数据
+            debugger;
+            var sn = $("#mode_sn").val();
+            // ajax
+            $.ajax({
+                type: "POST",
+                url: "/admin/orderreturnsetting/delete",
+                dataType: "json",
+                data: JSON.stringify({"id": sn}),
+                cache: false,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $('#returnReasonDelete').modal('hide');
+                    alert(data["msg"]);
+                    //刷新页面
+                    window.location.reload();
+                },
+                error: function (error) {
+                    debugger;
+                    var errMsg = "错误状态码：" + JSON.parse(error.responseText)["status"]
+                        + "\n错误原因：" + JSON.parse(error.responseText)["message"];
+                    $('#returnReasonDelete').modal('hide');
+                    alert(errMsg);
+                    //刷新页面
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+</div>
+</html>

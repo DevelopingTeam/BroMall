@@ -24,12 +24,6 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
-		<!--<dependency>-->
-			<!--<groupId>org.thymeleaf</groupId>-->
-			<!--<artifactId>thymeleaf</artifactId>-->
-			<!--<version>3.0.0.RELEASE</version>-->
-		<!--</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -102,6 +96,11 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>2.7.0</version>
+		</dependency>
+		<!--一个Java库，能自动插入编辑器并构建工具，简化Java开发-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 		</dependency>
 	</dependencies>
 

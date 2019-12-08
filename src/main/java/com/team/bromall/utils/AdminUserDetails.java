@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * SpringSecurity需要的用户详情
  *
- * @author zhangbocheng
+ * @author team
  * @version v1.0
  * @date 2019/11/30 23:59
  */

@@ -93,4 +93,11 @@ public interface OmsOrderOperateHistoryMapper {
      * @mbg.generated Fri Nov 29 11:29:29 CST 2019
      */
     int updateByPrimaryKey(OmsOrderOperateHistory record);
+
+    /**
+     * 批量插入操作
+     * @param orderOperateHistoryList 记录参数
+     * @return 操作状态
+     */
+    int insertList(@Param("list") List<OmsOrderOperateHistory> orderOperateHistoryList);
 }

@@ -1,5 +1,8 @@
 package com.team.bromall.mapper;
 
+import com.team.bromall.dto.OrderReturnApplyQueryParam;
+import com.team.bromall.dto.OrderReturnDetail;
+import com.team.bromall.model.OmsCompanyAddress;
 import com.team.bromall.model.OmsOrderReturnApply;
 import com.team.bromall.model.OmsOrderReturnApplyExample;
 import java.util.List;
@@ -93,4 +96,18 @@ public interface OmsOrderReturnApplyMapper {
      * @mbg.generated Fri Nov 29 11:29:29 CST 2019
      */
     int updateByPrimaryKey(OmsOrderReturnApply record);
+
+    /**
+     * 查询申请列表
+     * @param queryParam 查询参数
+     * @return 查询结果
+     */
+    List<OmsOrderReturnApply> getList(@Param("queryParam") OrderReturnApplyQueryParam queryParam);
+
+    /**
+     *  获取申请详情
+     * @param id 订单服务ID
+     * @return 查询结果
+     */
+    OrderReturnDetail getDetail(@Param("id")Long id);
 }

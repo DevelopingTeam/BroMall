@@ -1,0 +1,330 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout">
+ <div th:fragment="content">
+  <div class="container-fluid">
+
+   <!-- Breadcrumbs-->
+   <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+     <a href="/admin">首页</a>
+    </li>
+    <li class="breadcrumb-item">
+     <a href="/admin/orderlist">订单管理</a>
+    </li>
+    <li class="breadcrumb-item active">退货原因详情</li>
+   </ol>
+
+   <!-- DataTables Example -->
+   <div class="card mb-3">
+    <div class="card-header">
+     <i class="fas fa-map"></i>
+     退货商品信息
+    </div>
+    <div class="card-body">
+     <div class="table-responsive">
+      <table class="table table-bordered" id="order_good" width="100%" cellspacing="0">
+       <thead>
+       <tr class="table-primary">
+        <th>商品图片</th>
+        <th>商品名称</th>
+        <th>品 牌</th>
+        <th>价 格</th>
+        <th>货 号</th>
+        <th>属 性</th>
+        <th>数 量</th>
+        <th>小 计</th>
+       </tr>
+       </thead>
+       <tbody>
+       <tr>
+        <td>
+         <img th:src="${returnDetail.productPic}" th:width="80" th:height="80">
+        </td>
+        <td th:text="${returnDetail.productName}"></td>
+        <td th:text="${returnDetail.productBrand}"></td>
+        <td th:text="${returnDetail.productRealPrice}"></td>
+        <td th:text="'NO.'+${returnDetail.productId}"></td>
+        <td th:text="${returnDetail.productAttr}"></td>
+        <td th:text="${returnDetail.productCount}"></td>
+        <td th:text="${returnDetail.productRealPrice}*${returnDetail.productCount}"></td>
+       </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="card mb-3">
+    <div class="card-header">
+     <i class="fas fa-map"></i>
+     服务单信息
+    </div>
+    <div class="card-body">
+     <form class="form-horizontal" id="order_service">
+      <div class="table-responsive">
+       <table class="table table-bordered" width="100%" cellspacing="0">
+        <tr>
+         <td class="table-primary" width="200">服务单号</td>
+         <td>
+          <input th:name="applyId" th:id="applyId" type="text"
+                 th:disabled="true" th:value="${returnDetail.id}" style="border:0px;">
+         </td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">申请状态</td>
+         <td th:switch="${returnDetail.status}">
+          <!--申请状态：0->待处理；1->退货中；2->已完成；3->已拒绝-->
+          <span th:case="0">待处理</span>
+          <span th:case="1">退货中</span>
+          <span th:case="2">已完成</span>
+          <span th:case="3">已拒绝</span>
+         </td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">订单编号</td>
+         <td>
+          <span th:text="${returnDetail.orderSn}"></span>
+          &nbsp;&nbsp;
+          <a th:href="'orderdetail?id='+${returnDetail.orderId}">查看</a>
+         </td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">申请时间</td>
+         <td th:text="${#dates.format(returnDetail.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">用户账号</td>
+         <td th:text="${returnDetail.memberUsername}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">联系人</td>
+         <td th:text="${returnDetail.returnName}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">联系方式</td>
+         <td th:text="${returnDetail.returnPhone}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">退货原因</td>
+         <td th:text="${returnDetail.reason}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">问题描述</td>
+         <td th:text="${returnDetail.description}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">凭证图片</td>
+         <td>
+          <b th:each="img:${#strings.arraySplit(returnDetail.proofPics,',')}">
+           <img th:src="${img}==null?'#':${img}" th:width="80" th:height="80">
+          </b>
+         </td>
+        </tr>
+       </table>
+      </div>
+      <div class="table-responsive">
+       <table class="table table-bordered" width="100%" cellspacing="0">
+        <tr>
+         <td class="table-primary" width="200">订单金额</td>
+         <td th:text="'¥ '+${returnDetail.productRealPrice}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">确认退款金额</td>
+         <td>
+          ¥ <input type="text" name="returnAmount" id="returnAmount"
+                   th:value="${returnDetail.returnAmount}==null?0:${returnDetail.returnAmount}"
+                   th:disabled="${returnDetail.status}==0?'false':'true'">
+         </td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">收货人姓名</td>
+         <td th:text="${returnDetail.returnName}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">联系方式</td>
+         <td th:text="${returnDetail.returnPhone}"></td>
+        </tr>
+       </table>
+      </div>
+      <!--仅待处理，处理信息不显示-->
+      <div class="table-responsive" th:style="${returnDetail.status}==0?'display:none':''">
+       <table class="table table-bordered" width="100%" cellspacing="0">
+        <tr>
+         <td class="table-primary" width="200">处理人</td>
+         <td th:text="${returnDetail.handleMan}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">处理时间</td>
+         <td th:text="${#dates.format(returnDetail.handleTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">处理备注</td>
+         <td th:text="${returnDetail.handleNote}"></td>
+        </tr>
+       </table>
+      </div>
+       <!--仅收货完成，收货信息显示-->
+      <div class="table-responsive" th:style="${returnDetail.status}==2?'':'display:none'">
+       <table class="table table-bordered" width="100%" cellspacing="0">
+        <tr>
+         <td class="table-primary" width="200">收货人员</td>
+         <td th:text="${returnDetail.receiveMan}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">收货时间</td>
+         <td th:text="${#dates.format(returnDetail.receiveTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        <tr>
+         <td class="table-primary" width="200">收货备注</td>
+         <td th:text="${returnDetail.receiveNote}"></td>
+        </tr>
+       </table>
+      </div>
+      <!--♏️填写处理备注-->
+      <div class="table-responsive" th:style="${returnDetail.status}==0?'':'display:none'">
+       <table class="table table-bordered" width="100%" cellspacing="0">
+        <tr>
+         <td class="table-primary" width="200">处理备注</td>
+         <td>
+          <input class="col-sm-12" id="handleNote" name="handleNote" type="text" placeholder="请填写处理备注信息">
+         </td>
+        </tr>
+       </table>
+      </div>
+      <!--♏️填写收货备注-->
+      <div class="table-responsive" th:style="${returnDetail.status}==1?'':'display:none'">
+        <table class="table table-bordered" width="100%" cellspacing="0">
+         <tr>
+          <td class="table-primary" width="200">收货备注</td>
+          <td>
+           <input class="col-sm-12" id="receiveNote" name="receiveNote" type="text" placeholder="请填写收货备注信息">
+          </td>
+         </tr>
+        </table>
+      </div>
+      <!--申请状态：0->待处理；1->退货中；2->已完成；3->已拒绝-->
+      <div class="row" th:style="${returnDetail.status}==3?'display:none':''">
+       <div class="col-sm-4"></div>
+       <div class="col-sm-2" th:style="${returnDetail.status}==0?'':'display:none'">
+         <button type="button" class="btn btn-primary" th:onclick="javascript:confirm_return()">确认退货</button>
+       </div>
+       <div class="col-sm-2" th:style="${returnDetail.status}==1?'':'display:none'">
+        <button type="button" class="btn btn-primary" th:onclick="javascript:confirm_receipt()">确认收货</button>
+       </div>
+       <div class="col-sm-2" th:style="${returnDetail.status}==0?'':'display:none'">
+         <button type="button" class="btn btn-danger" th:onclick="javascript:refuse_return()">拒绝退货</button>
+       </div>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div>
+  <!-- /.container-fluid -->
+   <!-- Bootstrap core JavaScript-->
+   <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+   <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+   <!-- Core plugin JavaScript-->
+   <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+   <!-- Page level plugin JavaScript-->
+   <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
+   <script th:src="@{/vendor/datatables/jquery.dataTables.js}"></script>
+   <script th:src="@{/vendor/datatables/dataTables.bootstrap4.js}"></script>
+
+   <!-- Custom scripts for all pages-->
+   <script th:src="@{/js/sb-admin.min.js}"></script>
+   <!-- Data scripts for this page-->
+  <script th:inline="javascript">
+      // 确认退货
+      function confirm_return() {
+          // 获取数据
+          var sn = $("#applyId").val();
+          var amount = $("#returnAmount").val();
+          var note = $("#handleNote").val();
+          var status = 1;
+          var return_param = {"id": sn, "returnAmount": amount,
+              "handleMan": "admin", "handleNote": note, "status": status};
+          // ajax
+          $.ajax({
+              type: "POST",
+              url: "/admin/orderreturndetail/update",
+              dataType: "json",
+              data: JSON.stringify(return_param),
+              cache: false,
+              contentType: "application/json; charset=utf-8",
+              success: function (data) {
+                  alert(data["msg"]);
+                  //刷新页面
+                  window.location.reload();
+              },
+              error: function (error) {
+                  var errMsg = "错误状态码：" + JSON.parse(error.responseText)["status"]
+                      + "\n错误原因：" + JSON.parse(error.responseText)["message"];
+                  alert(errMsg);
+                  //刷新页面
+                  window.location.reload();
+              }
+          });
+      }
+
+      // 确认收货
+      function confirm_receipt() {
+          // 获取数据
+          var sn = $("#applyId").val();
+          var note = $("#receiveNote").val();
+          var status = 2;
+          var receipt_param = {"id": sn, "receiveMan": "admin", "receiveNote": note, "status": status};
+          // ajax
+          $.ajax({
+              type: "POST",
+              url: "/admin/orderreturndetail/update",
+              dataType: "json",
+              data: JSON.stringify(receipt_param),
+              cache: false,
+              contentType: "application/json; charset=utf-8",
+              success: function (data) {
+                  alert(data["msg"]);
+                  //刷新页面
+                  window.location.reload();
+              },
+              error: function (error) {
+                  var errMsg = "错误状态码：" + JSON.parse(error.responseText)["status"]
+                      + "\n错误原因：" + JSON.parse(error.responseText)["message"];
+                  alert(errMsg);
+                  //刷新页面
+                  window.location.reload();
+              }
+          });
+      }
+
+      // 拒绝退货
+      function refuse_return() {
+          // 获取数据
+          var sn = $("#applyId").val();
+          var note = $("#handleNote").val();
+          var status = 3;
+          var refuse_param = {"id": sn, "handleMan": "admin", "handleNote": note, "status": status};
+          // ajax
+          $.ajax({
+              type: "POST",
+              url: "/admin/orderreturndetail/update",
+              dataType: "json",
+              data: JSON.stringify(refuse_param),
+              cache: false,
+              contentType: "application/json; charset=utf-8",
+              success: function (data) {
+                  alert(data["msg"]);
+                  //刷新页面
+                  window.location.reload();
+              },
+              error: function (error) {
+                  var errMsg = "错误状态码：" + JSON.parse(error.responseText)["status"]
+                      + "\n错误原因：" + JSON.parse(error.responseText)["message"];
+                  alert(errMsg);
+                  //刷新页面
+                  window.location.reload();
+              }
+          });
+      }
+  </script>
+ </div>
+</html>
