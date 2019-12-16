@@ -70,36 +70,6 @@ public class AdminHomeController {
         return "home";
     }
 
-    @RequestMapping(value = "/admin/shopadding", method = RequestMethod.GET)
-    public String shopAdding()
-    {
-        return "shopadding";
-    }
-
-    @RequestMapping(value = "/admin/shoplist", method = RequestMethod.GET)
-    public String shopList()
-    {
-        return "shoplist";
-    }
-
-    @RequestMapping(value = "/admin/shopclassify", method = RequestMethod.GET)
-    public String shopClassify()
-    {
-        return "shopclassify";
-    }
-
-    @RequestMapping(value = "/admin/shoptype", method = RequestMethod.GET)
-    public String shopType()
-    {
-        return "shoptype";
-    }
-
-    @RequestMapping(value = "/admin/shopbrand", method = RequestMethod.GET)
-    public String shopBrand()
-    {
-        return "shopbrand";
-    }
-
     @RequestMapping(value = "/admin/spikelist", method = RequestMethod.GET)
     public String spikeList()
     {

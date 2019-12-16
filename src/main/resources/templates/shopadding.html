@@ -1,5 +1,44 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="layout">
 <div th:fragment="content">
-    页面中正文内容：这是商品添加
+    <div id="content-wrapper">
+        <div class="container-fluid">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/admin/shoplist">商品管理</a>
+                </li>
+                <li class="breadcrumb-item active">添加商品</li>
+            </ol>
+
+            <form class="form-horizontal" action="#" method="post">
+                <div class="container-fluid row">
+                    <div>
+                        <label> 商品名称：</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="keyword"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- /.container-fluid -->
+        <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+        <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+        <!-- Page level plugin JavaScript-->
+        <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
+        <script th:src="@{/vendor/datatables/jquery.dataTables.js}"></script>
+        <script th:src="@{/vendor/datatables/dataTables.bootstrap4.js}"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script th:src="@{/js/sb-admin.min.js}"></script>
+
+        <script th:src="@{/js/moment-with-locales.min.js}"></script>
+        <script th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+        <script th:src="@{/js/common.js}"></script>
+    </div>
 </div>
 </html>
